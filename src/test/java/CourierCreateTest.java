@@ -1,4 +1,6 @@
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static io.restassured.RestAssured.given;
@@ -7,43 +9,42 @@ import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 
 public class CourierCreateTest {
-    private static final String COURIER_PATH = "api/v1/courier";
-
-    CourierCredentials createCourier = new CourierCredentials("alex", "1234", "kot");
-    CourierCredentials CreateWithoutLogin = new CourierCredentials("", "1234", "kot");
+    private Courier courier;
+    private CourierCredentials courierCredentials;
 
     @Before
     public void setUp() {
-        RestAssured.baseURI= "https://qa-scooter.praktikum-services.ru/";
+        RestAssured.baseURI = Courier.BASE_URL;
+        courier = new Courier();
+        courierCredentials = new CourierCredentials("alex", "1234", "kot");
+        courierCredentials = new CourierCredentials(courierCredentials.getLogin(), courierCredentials.getPassword());
+    }
+
+    @After
+    public void deleteCourier() {
+        CourierCredentials loginCredentials = courier.getLoginCourier(courierCredentials).as(CourierCredentials.class);
+        courier.deleteCourier(loginCredentials.getId());
     }
 
     @Test
     @DisplayName("Создание нового пользователя")
     @Description("Проверяем создание нового пользователя")
     public void createNewCourier(){
-        given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(createCourier)
-                .when()
-                .post(COURIER_PATH)
+        Response createNewCourier = courier.getCreateCourier(courierCredentials);
+        createNewCourier
                 .then()
                 .assertThat()
                 .statusCode(201)
-                .body("ok", equalTo(true))
                 .body("ok", equalTo(true));
     }
 
     @Test
     @DisplayName("Создаем пользователя без login")
     @Description("Проверяем создание пользователя без обязательных полей")
-    public void CreateCourierWithoutLogin(){
-        given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(CreateWithoutLogin)
-                .when()
-                .post(COURIER_PATH)
+    public void createCourierWithoutLogin(){
+        courierCredentials.setLogin("");
+        Response CreateCourierWithoutLogin = courier.getCreateCourier(courierCredentials);
+        CreateCourierWithoutLogin
                 .then()
                 .assertThat()
                 .statusCode(400)
@@ -53,19 +54,10 @@ public class CourierCreateTest {
     @Test
     @DisplayName("Создаем двух одинаковых пользователей")
     @Description("Проверяем создание двух одинаковых пользователей")
-    public void CreateRecurringLogin(){
-        given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(createCourier)
-                .when()
-                .post(COURIER_PATH);
-        given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(createCourier)
-                .when()
-                .post(COURIER_PATH)
+    public void createRecurringLogin(){
+        courier.createCourier(courierCredentials);
+        Response createRecurringLogin = courier.getCreateCourier(courierCredentials);
+        createRecurringLogin
                 .then()
                 .assertThat()
                 .statusCode(409)

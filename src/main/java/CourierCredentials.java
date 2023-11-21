@@ -2,6 +2,8 @@ public class CourierCredentials {
     private String login;
     private String password;
     private String firstName;
+    private int id;
+
 
     public CourierCredentials(String login, String password, String firstName) {
         this.login = login;
@@ -25,6 +27,10 @@ public class CourierCredentials {
         return login;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void setLogin(String login) {
         this.login = login;
     }
@@ -39,5 +45,8 @@ public class CourierCredentials {
 
     public String getFirstName() {
         return firstName;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 }
