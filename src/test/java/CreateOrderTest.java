@@ -15,10 +15,11 @@ public class CreateOrderTest {
     public CreateOrderTest(String[] color) {
         this.color = color;
     }
+    private Courier orderUrl;
 
     @Before
     public void setUp() {
-        RestAssured.baseURI = Courier.BASE_URL;
+        orderUrl = new Courier();;
         order = new Order();
 
     }

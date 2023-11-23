@@ -3,7 +3,6 @@ import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
@@ -11,10 +10,10 @@ import io.qameta.allure.junit4.DisplayName;
 public class CourierCreateTest {
     private Courier courier;
     private CourierCredentials courierCredentials;
-
+    private Courier courierUrl;
     @Before
     public void setUp() {
-        RestAssured.baseURI = Courier.BASE_URL;
+        courierUrl = new Courier();
         courier = new Courier();
         courierCredentials = new CourierCredentials("alex", "1234", "kot");
         courierCredentials = new CourierCredentials(courierCredentials.getLogin(), courierCredentials.getPassword());

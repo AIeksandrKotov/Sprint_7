@@ -1,11 +1,14 @@
 import io.qameta.allure.Step;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.*;
 
 public class Order {
     private static final String ORDER_PATH = "/api/v1/orders";
-
+    public static final String BASE_URL = "https://qa-scooter.praktikum-services.ru/";
+    public Order() {
+        RestAssured.baseURI = BASE_URL;}
 
     @Step("Получаем ответ при создании заказа")
     public Response getOrder (OrderCredentials credentials) {

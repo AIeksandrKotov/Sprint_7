@@ -7,10 +7,10 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class OrderTest {
     private Order order;
-
+    private Courier orderUrl;
     @Before
     public void setUp() {
-        RestAssured.baseURI = Courier.BASE_URL;
+        orderUrl = new Courier();;
         order = new Order();
     }
 
