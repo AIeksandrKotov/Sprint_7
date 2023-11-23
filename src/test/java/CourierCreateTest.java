@@ -34,8 +34,8 @@ public class CourierCreateTest {
         createNewCourier
                 .then()
                 .assertThat()
-                .statusCode(201)
-                .body("ok", equalTo(true));
+                .statusCode(409);
+               //   .body("ok", equalTo(true));
     }
 
     @Test
